@@ -219,6 +219,8 @@ input_data=pd.read_csv("DataPulling/DC_Resturant.csv")[['url','id']].values.toli
 for input in input_data:
     my_df=queryAdditionalInfo(input[1], input[0],my_df)
     time.sleep(2)
+#%%
+my_df.to_csv(r'DataScrape/DC_Resturant_Additional_Info.csv', index=None,sep=',', mode='a',header=None)
 
 
 
