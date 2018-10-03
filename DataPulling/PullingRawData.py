@@ -10,24 +10,32 @@ Created on Sun Sep 30 10:18:37 2018
 from yelpapi import YelpAPI
 import pandas as pd
 import numpy as np 
-api_key="K5URbDqMy4NUlwDo3ijwez_LDl0mUP2rM_6t4NuXaD2-yXus8a8a5hIha-1YY4uKZUv3JtvawCiNwcZASuw_c3DhkqLHbyI_WBudYr3K_Cc7luMMsm4UZmV-L_SvW3Yx"
+api_key="1kB3IeEvGUKEtQqyFg9cuVGztBPX-kJAHnSFNRSEKSSjvetFfxvp8GtmSpdwcn0dF7soebTxhiG-wclEIqRy7D3cjKWlrABZ10XnICV17TuqYEVq4lpVMyFDbiqxW3Yx"
 yelp_api = YelpAPI(api_key)
 #%%
-neighborhood=open('DC_Neighborhood_list','r')
+neighborhood=open('Huston_neighborhoods.txt','r')
 neighbor_list=neighborhood.readlines()
 resultslist=[]
+
 for neighbor in neighbor_list:
-    loc=(neighbor.replace("\n","").lower())+",washington,dc"
-    response = yelp_api.search_query(term='resturant', \
-                                 location=loc,\
-                                 limit=50)
-    resultslist.append(response)
+    loc=(neighbor.replace("\n","").lower())+", huston"
+    for count in range (5):
+        try:
+            response = yelp_api.search_query(term='resturant', \
+                                     location=loc,\
+                                     sort_by='distance',\
+                                     radius=20000,\
+                                     offset=count*30,\
+                                     limit=50)
+            resultslist.append(response)
+        except:
+            continue
 #%%
 col_names=['name','latitude','longitude','is_closed','zipcode',\
            'city','state','price','rating','url','review_count', \
            'transactions','category','id']
 my_df  = pd.DataFrame(columns = col_names)
-my_df.to_csv(r'DC_Resturant.csv', index=None,sep=',', mode='w')
+my_df.to_csv(r'Huston_Resturant.csv', index=None,sep=',', mode='w')
 
 #%%
 
@@ -70,9 +78,8 @@ for queryresults in resultslist:
         except:
             continue
 #my_df=my_df.drop_duplicates(['id'])
-#%%
 my_df=my_df.drop_duplicates(['id'])
-my_df.to_csv(r'DC_Resturant.csv', index=None, sep=',', mode='a',header=None)
+my_df.to_csv(r'Huston_Resturant.csv', index=None, sep=',', mode='a',header=None)
 
 
 
