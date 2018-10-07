@@ -20,5 +20,3 @@ for data_file in filelist:
     my_df=map_data[['yelp_id','place_id','types']]
     my_df=my_df.pivot_table(values='place_id', index='yelp_id', columns='types', aggfunc=pd.Series.nunique)
     my_df.to_csv("RawData/GoogleMapAPI/"+filename)
-
-

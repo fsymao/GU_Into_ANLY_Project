@@ -24,23 +24,16 @@ restaurant_file = pd.read_csv(path+'/Boston_Resturant.csv')
 
 location_data = restaurant_file[['latitude','longitude']]
 yelp_id = restaurant_file['id']
-
 lat_lng_list = list()
 for i in np.arange(len(location_data)):
     lat_lng_list = lat_lng_list + [(str(location_data['latitude'][i])+','+str(location_data['longitude'][i]))]
 
-
 BaseURL ='https://maps.googleapis.com/maps/api/place/nearbysearch/json?'
-
-
 type_list = ['bus_station','subway_station','taxi_stand','supermarket','shopping_mall','school',
              'book_store','museum','atm','bank','train_station','gym','gas_station','cafe','bar',
              'beauty_salon','movie_theater']
-
 columns_name = ['yelp_id','restaurant_location','id','place_id','types','name','rating','geometry','plus_code','vicinity']
-
 output_all = pd.DataFrame(columns = columns_name )
-
 
 count = 0
 for lat_lng in lat_lng_list:
