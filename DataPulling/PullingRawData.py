@@ -13,7 +13,7 @@ import numpy as np
 api_key="1kB3IeEvGUKEtQqyFg9cuVGztBPX-kJAHnSFNRSEKSSjvetFfxvp8GtmSpdwcn0dF7soebTxhiG-wclEIqRy7D3cjKWlrABZ10XnICV17TuqYEVq4lpVMyFDbiqxW3Yx"
 yelp_api = YelpAPI(api_key)
 #%%
-neighborhood=open('Huston_neighborhoods.txt','r')
+neighborhood=open('DataPulling/Huston_neighborhoods.txt','r')
 neighbor_list=neighborhood.readlines()
 resultslist=[]
 
@@ -35,7 +35,7 @@ col_names=['name','latitude','longitude','is_closed','zipcode',\
            'city','state','price','rating','url','review_count', \
            'transactions','category','id']
 my_df  = pd.DataFrame(columns = col_names)
-my_df.to_csv(r'Huston_Resturant.csv', index=None,sep=',', mode='w')
+my_df.to_csv(r'RawData/DataPulling/Huston_Resturant.csv', index=None,sep=',', mode='w')
 
 #%%
 
@@ -79,7 +79,7 @@ for queryresults in resultslist:
             continue
 #my_df=my_df.drop_duplicates(['id'])
 my_df=my_df.drop_duplicates(['id'])
-my_df.to_csv(r'Huston_Resturant.csv', index=None, sep=',', mode='a',header=None)
+my_df.to_csv(r'RawData/DataPulling/Huston_Resturant.csv', index=None, sep=',', mode='a',header=None)
 
 
 

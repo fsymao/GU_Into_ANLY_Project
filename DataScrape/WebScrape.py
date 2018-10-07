@@ -211,13 +211,12 @@ col_names=['Id','Name','category','lowprice','highprice','health_index',\
            'Parking','Smoking_allowed','Take_out','Takes_Reservations','Wheelchair_Accessible','WIFI', \
            'Opened_24hrs','Ambience','Attire','Noise_Level','Music']
 my_df  = pd.DataFrame(columns = col_names)
-my_df.to_csv(r'DataScrape/Huston_Resturant_Additional_Info.csv', index=None,sep=',', mode='w')
-input_data=pd.read_csv("DataPulling/Huston_Resturant.csv")[['url','id']].values.tolist()
+my_df.to_csv(r'RawData/DataScrape/Huston_Resturant_Additional_Info.csv', index=None,sep=',', mode='w')
+input_data=pd.read_csv("RawData/DataPulling/Huston_Resturant.csv")[['url','id']].values.tolist()
 for input in input_data:
     my_df=queryAdditionalInfo(input[1], input[0],my_df)
     time.sleep(2)
-    
-my_df.to_csv(r'DataScrape/Huston_Resturant_Additional_Info.csv', index=None,sep=',', mode='a',header=None)
+my_df.to_csv(r'RawData/DataScrape/Huston_Resturant_Additional_Info.csv', index=None,sep=',', mode='a',header=None)
 
 
 
