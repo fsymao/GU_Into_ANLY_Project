@@ -17,7 +17,6 @@ Created on Sat Oct  6 20:17:08 2018
 # =============================================================================
 # Methods in Calculating the overall cleaniness index for the dataset: 
 # There are 59 Columns in the datasets, each column will carry 10 points.
-# We will take out the context column out of the score calculation, like name or ID.
 # Based on the heuristics and understanding of the data, we have predefined 
 # a list indidate whether it is a  context column and the max min values.
 # If it is not null and out of range, we say that the particular cell is out wrong.
@@ -49,13 +48,13 @@ def DataCleanessCheck(my_data):
     #To load in the pre-defined context and range list to calculate the health index
     col_definition=pd.read_csv("DataPreProcessing/Column_Definition.csv")
     # calculate the total score
-    total_score=10* col_definition[col_definition['Context']=="No"].shape[0] 
+    total_score=10* col_definition.shape[0] 
     col_definition=col_definition.values
     score=0
     for col in col_definition:
         temp=0
         missing=missing_rate[col[0]]
-        if(col[1]=="No"):
+        if(col[1]=="No" or col[1]=="Yes"):
             score+=10*(1-missing)
             if(str(col[2])!='nan' and str(col[3])!='nan'):
                 temp=my_data[(my_data[col[0]]>=int(col[2])) & \

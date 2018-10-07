@@ -16,6 +16,7 @@ import json
 pd.set_option('display.max_rows', 500)
 pd.set_option('display.max_columns', 500)
 import os
+import math
 
 #%%
 
@@ -362,7 +363,7 @@ def GoogleMapAPI(restaurant_file):
     print("\n\n\n")
     return output_all.head(100)
 # =============================================================================
-# Function to perform a cleaness Check
+# Function to perform a cleaness Check 
 # =============================================================================
 def DataCleanessCheck(my_data):
     print("The Data Schema will be: ")
@@ -410,7 +411,62 @@ def DataCleanessCheck(my_data):
     score-=temp*0.5
     
     cleaness_index=score/total_score
-    return cleaness_index       
+    return cleaness_index
+
+# =============================================================================
+# Feature Generation
+# =============================================================================
+
+def first_feature(resturantdf):
+    resturantdf['popularity']='NaN'
+    for i in resturantdf.id.index:
+        if resturantdf.loc[i,'review_count'] < 10:
+            resturantdf.loc[i,'popularity'] = 'biased'
+        elif 10 <= resturantdf.loc[i,'review_count'] < 200:
+            resturantdf.loc[i,'popularity'] = 'F'
+        elif 200 <= resturantdf.loc[i,'review_count'] < 400:
+            resturantdf.loc[i,'popularity'] = 'E'
+        elif 400 <= resturantdf.loc[i,'review_count'] < 600:
+            resturantdf.loc[i,'popularity'] = 'D'
+        elif 600 <= resturantdf.loc[i,'review_count'] < 800:
+            resturantdf.loc[i,'popularity'] = 'C'
+        elif 800 <= resturantdf.loc[i,'review_count'] < 1000:
+            resturantdf.loc[i,'popularity'] = 'B'
+        elif resturantdf.loc[i,'review_count'] >= 1000:
+            resturantdf.loc[i,'popularity'] = 'A'
+        else:
+            print("test for invalid")
+    return resturantdf
+
+def second_feature(row):
+    price=row['price']
+    if (len(price)==1):
+        return 1
+    elif (len(price)==2):
+        return 2
+    elif(len(price)==3):
+        return 3
+    elif(len(price)==4):
+        return 4
+    
+def ifnull(var, val):
+  if math.isnan(var):
+    return val
+  return var
+   
+def third_feature(row):
+    transport_spot=ifnull(row['bus_station'],0)+ifnull(row['subway_station'],0)+ \
+    ifnull(row['train_station'],0)+ifnull(row['taxi_stand'],0)
+    if(transport_spot==0):
+        return 'Very_Uncovenient'
+    elif(transport_spot>0 and transport_spot<=10):
+        return 'Somewhat_Unconvenient'
+    elif (transport_spot>10 and transport_spot<=30):
+        return 'Somewhat_convenient'
+    elif (transport_spot>30 and transport_spot<=60):
+        return 'Convenient'
+    else:
+        return 'Super_Convenient'       
 #%%
 my_df=yelpAPITesting()
 input_data=my_df.head(1)[['url','id']].values.tolist()
@@ -430,8 +486,17 @@ print("To Perform out data cleaness check and feature generation")
 my_data=pd.read_csv("RawData/Resturant_Full_Infomation.csv", sep=',')
 print("The overall health score of the dataset is "+str(DataCleanessCheck(my_data)))
 
-
-
+print("=========================================================")
+print("To Perform data feature generation")
+first_feature(my_data)
+print("New Feature 1 and counts:")
+print(my_data['popularity'].value_counts(dropna = False))
+my_data['price_category']=my_data.apply (lambda row: second_feature(row),axis=1)
+print("New Feature 2 and counts:")
+print(my_data['price_category'].value_counts(dropna = False))
+print("New Feature 3 and counts:")
+my_data['transportation']=my_data.apply (lambda row: third_feature(row),axis=1)
+print(my_data['transportation'].value_counts(dropna = False))
 
 
 
